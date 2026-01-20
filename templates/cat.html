@@ -106,6 +106,17 @@
         margin-top: 8px;
       }
 
+      .note {
+        position: absolute;
+        bottom: 18px;
+        right: 22px;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(31, 43, 59, 0.5);
+        pointer-events: none;
+      }
+
       @media (max-width: 640px) {
         .card {
           padding: 22px;
@@ -134,22 +145,36 @@
       </div>
     </main>
 
+    <div class="note" id="cat-note">Try harder. The cat listens...</div>
+
     <script>
+      const visitKey = "cat-visit-count";
+      let visitCount = 0;
+      try {
+        visitCount = Number(window.localStorage.getItem(visitKey)) || 0;
+        visitCount += 1;
+        window.localStorage.setItem(visitKey, String(visitCount));
+      } catch (error) {
+        visitCount = 1;
+      }
+
       const chance = Math.random();
-      const isCat = chance < 0.05; // 5% chance
+      const isCat = visitCount > 5 && chance < 0.05; // 5% chance after 5 visits
 
       const title = document.getElementById("title");
       const subtitle = document.getElementById("subtitle");
       const tease = document.getElementById("tease");
       const frame = document.getElementById("cat-frame");
       const img = document.getElementById("cat-img");
+      const note = document.getElementById("cat-note");
 
       if (isCat) {
         title.textContent = "A cat appears! 🐱✨";
         subtitle.textContent = "You beat the odds. This almost never happens.";
         frame.style.display = "block";
         img.src = "https://cataas.com/cat?cachebust=" + Date.now();
-        tease.textContent = "Okay fine… cats can be a little cute sometimes.";
+        tease.textContent = "Okay fine… cats can be a little cute sometimes~ 🥺";
+        note.style.display = "none";
       } else {
         title.textContent = "Nice try 😌";
         subtitle.textContent = "You were hoping for a cat, weren’t you?";
