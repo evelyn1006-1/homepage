@@ -245,18 +245,38 @@
       if (dogBadge && chatBubble) {
         const defaultText = chatBubble.dataset.default || chatBubble.textContent;
         const hoverText = chatBubble.dataset.hover || defaultText;
+        const catText = "Dogs are cuter than cats 🥰🐶";
+        let catMode = false;
 
         const showHover = () => {
-          chatBubble.textContent = hoverText;
+          if (!catMode) {
+            chatBubble.textContent = hoverText;
+          }
         };
         const showDefault = () => {
-          chatBubble.textContent = defaultText;
+          if (!catMode) {
+            chatBubble.textContent = defaultText;
+          }
         };
 
         dogBadge.addEventListener("mouseenter", showHover);
         dogBadge.addEventListener("mouseleave", showDefault);
         dogBadge.addEventListener("focus", showHover);
         dogBadge.addEventListener("blur", showDefault);
+
+        let buffer = "";
+        const targets = ["cat", "meow"];
+        window.addEventListener("keydown", (event) => {
+          const key = event.key.toLowerCase();
+          if (key.length !== 1 || key < "a" || key > "z") {
+            return;
+          }
+          buffer = (buffer + key).slice(-8);
+          if (!catMode && targets.some((t) => buffer.includes(t))) {
+            catMode = true;
+            chatBubble.textContent = catText;
+          }
+        });
       }
     </script>
   </body>
