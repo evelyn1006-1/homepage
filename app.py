@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, abort, send_from_directory
+from flask import Flask, render_template, request, abort, send_from_directory, redirect
 from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
 
@@ -74,5 +74,9 @@ def create_app():
     def dog():
         dog_url = "https://placedog.net/720/520?random"
         return render_template("dog.html", dog_url=dog_url)
+
+    @app.get("/cat")
+    def cat():
+        return redirect("/?cat=1")
 
     return app

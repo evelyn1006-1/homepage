@@ -247,6 +247,12 @@
         const hoverText = chatBubble.dataset.hover || defaultText;
         const catText = "Dogs are cuter than cats 🥰🐶";
         let catMode = false;
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get("cat") === "1") {
+          catMode = true;
+          chatBubble.textContent = catText;
+        }
 
         const showHover = () => {
           if (!catMode) {
