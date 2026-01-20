@@ -30,6 +30,11 @@ def create_app():
     app = Flask(__name__)
     if FLASK_SECRET_KEY:
         app.config["SECRET_KEY"] = FLASK_SECRET_KEY
+    app.config.update(
+        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+    )
 
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
@@ -44,6 +49,11 @@ def create_app():
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        response.headers["Content-Security-Policy"] = (
+            "frame-ancestors 'none'; "
+            "form-action 'self'; "
+            "base-uri 'self'"
+        )
         return response
 
     @app.get("/")
