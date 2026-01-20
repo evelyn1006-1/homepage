@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Cat Break?</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <style>
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-regular.woff2') }}") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-bold.woff2') }}") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: light;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        font-family: "Comic Neue", "Comic Sans MS", cursive;
+        background: radial-gradient(circle at top, #e6f0ff, #d7e6ff 45%, #c6dbff 80%);
+        color: #1f2b3b;
+      }
+
+      .card {
+        max-width: 720px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.88);
+        border-radius: 26px;
+        padding: 28px;
+        box-shadow: 0 26px 80px rgba(25, 55, 89, 0.18);
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 2rem;
+      }
+
+      p {
+        margin: 0 0 18px;
+        color: #354859;
+      }
+
+      .frame {
+        background: linear-gradient(145deg, #d3e4ff, #b7d2ff);
+        padding: 16px;
+        border-radius: 22px;
+        box-shadow:
+          inset 0 0 0 2px rgba(255, 255, 255, 0.7),
+          0 14px 32px rgba(45, 78, 118, 0.22);
+        display: none;
+      }
+
+      .frame img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 16px;
+        border: 4px solid rgba(255, 255, 255, 0.9);
+        background: #fff;
+      }
+
+      .meta {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.95rem;
+      }
+
+      .meta a {
+        color: #2d587b;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .meta a:hover {
+        text-decoration: underline;
+      }
+
+      .tease {
+        font-size: 1.1rem;
+        margin-top: 8px;
+      }
+
+      @media (max-width: 640px) {
+        .card {
+          padding: 22px;
+        }
+
+        h1 {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1 id="title">Loading…</h1>
+      <p id="subtitle"></p>
+
+      <div class="frame" id="cat-frame">
+        <img id="cat-img" alt="A very rare cat">
+      </div>
+
+      <p class="tease" id="tease"></p>
+
+      <div class="meta">
+        <a href="/dog">See a dog instead 🐶</a>
+        <a href="/">Back home</a>
+      </div>
+    </main>
+
+    <script>
+      const chance = Math.random();
+      const isCat = chance < 0.05; // 5% chance
+
+      const title = document.getElementById("title");
+      const subtitle = document.getElementById("subtitle");
+      const tease = document.getElementById("tease");
+      const frame = document.getElementById("cat-frame");
+      const img = document.getElementById("cat-img");
+
+      if (isCat) {
+        title.textContent = "A cat appears! 🐱✨";
+        subtitle.textContent = "You beat the odds. This almost never happens.";
+        frame.style.display = "block";
+        img.src = "https://cataas.com/cat?cachebust=" + Date.now();
+        tease.textContent = "Okay fine… cats can be a little cute sometimes.";
+      } else {
+        title.textContent = "Nice try 😌";
+        subtitle.textContent = "You were hoping for a cat, weren’t you?";
+        tease.textContent = "Dogs are still cuter though 🥰🐶";
+      }
+    </script>
+  </body>
+</html>

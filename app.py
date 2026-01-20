@@ -77,6 +77,6 @@ def create_app():
 
     @app.get("/cat")
     def cat():
-        return redirect("/?cat=1")
+        return render_template("cat.html")
 
     return app
