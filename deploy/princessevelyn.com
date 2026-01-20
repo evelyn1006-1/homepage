@@ -28,6 +28,20 @@ server {
         return 404;
     }
 
+    # Block admin and API probes
+    location = /admin {
+        return 404;
+    }
+    location /admin/ {
+        return 404;
+    }
+    location = /api {
+        return 404;
+    }
+    location /api/ {
+        return 404;
+    }
+
     location / {
         proxy_pass http://127.0.0.1:8003;
         proxy_set_header Host $host;
@@ -42,8 +56,8 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-
 }
+
 server {
     if ($host = www.princessevelyn.com) {
         return 301 https://$host$request_uri;
@@ -59,8 +73,5 @@ server {
 
     listen 80;
     return 404; # managed by Certbot
-
-
-
 
 }
