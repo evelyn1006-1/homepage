@@ -52,6 +52,45 @@
         border-radius: 20px;
         padding: 32px 36px;
         text-align: left;
+        position: relative;
+      }
+
+      .dog-badge {
+        position: absolute;
+        top: auto;
+        right: 18px;
+        bottom: 18px;
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+        font-size: 1.2rem;
+        transition: transform 0.15s ease;
+        text-decoration: none;
+      }
+
+      .dog-badge:hover,
+      .dog-badge:focus-visible {
+        animation: dog-bounce 0.7s ease;
+      }
+
+      @keyframes dog-bounce {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+        30% {
+          transform: translateY(-6px) scale(1.05);
+        }
+        55% {
+          transform: translateY(2px) scale(0.98);
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
       }
 
       .portrait-wrap {
@@ -87,13 +126,13 @@
         content: "";
         position: absolute;
         left: -8px;
-        top: 28px;
+        top: 50%;
         width: 14px;
         height: 14px;
         background: #f8f1e8;
         border-left: 1px solid #e4cbb2;
         border-bottom: 1px solid #e4cbb2;
-        transform: rotate(45deg);
+        transform: translateY(-50%) rotate(45deg);
       }
 
       .eyebrow {
@@ -157,10 +196,18 @@
   </head>
   <body>
     <main class="card">
+      <a class="dog-badge" href="/dog" aria-label="Go to the dog page" data-dog-badge>🐶</a>
       <p class="eyebrow">princessevelyn.com</p>
       <div class="portrait-wrap">
         <img class="portrait" src="{{ url_for('static', filename='img/evelyn.png') }}" alt="Cartoon portrait of Evelyn">
-        <div class="chat-bubble">Princess Evelyn says hi! I'm going to make this an amazing place~ ✨</div>
+        <div
+          class="chat-bubble"
+          data-chat-bubble
+          data-default="Princess Evelyn says hi! I'm going to make this an amazing place~ ✨"
+          data-hover="Dog? 🥺🥺"
+        >
+          Princess Evelyn says hi! I'm going to make this an amazing place~ ✨
+        </div>
       </div>
       <h1>Under development</h1>
       <p>
@@ -171,5 +218,26 @@
       </p>
       <span class="accent">Thank you for visiting.</span>
     </main>
+    <script>
+      const dogBadge = document.querySelector("[data-dog-badge]");
+      const chatBubble = document.querySelector("[data-chat-bubble]");
+
+      if (dogBadge && chatBubble) {
+        const defaultText = chatBubble.dataset.default || chatBubble.textContent;
+        const hoverText = chatBubble.dataset.hover || defaultText;
+
+        const showHover = () => {
+          chatBubble.textContent = hoverText;
+        };
+        const showDefault = () => {
+          chatBubble.textContent = defaultText;
+        };
+
+        dogBadge.addEventListener("mouseenter", showHover);
+        dogBadge.addEventListener("mouseleave", showDefault);
+        dogBadge.addEventListener("focus", showHover);
+        dogBadge.addEventListener("blur", showDefault);
+      }
+    </script>
   </body>
 </html>

@@ -60,4 +60,9 @@ def create_app():
             app.static_folder, "favicon.svg", mimetype="image/svg+xml"
         )
 
+    @app.get("/dog")
+    def dog():
+        dog_url = "https://placedog.net/720/520?random"
+        return render_template("dog.html", dog_url=dog_url)
+
     return app
