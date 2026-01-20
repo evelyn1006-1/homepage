@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="heart" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb65c" />
+      <stop offset="100%" stop-color="#ff6f2c" />
+    </linearGradient>
+  </defs>
+  <path
+    fill="url(#heart)"
+    d="M32 55C32 55 6 39 6 22C6 13.7 12.5 7 20.5 7C25.5 7 30.2 9.6 32 13.3C33.8 9.6 38.5 7 43.5 7C51.5 7 58 13.7 58 22C58 39 32 55 32 55Z"
+  />
+</svg>

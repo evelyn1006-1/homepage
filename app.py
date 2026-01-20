@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
 
@@ -53,5 +53,11 @@ def create_app():
     @app.get("/healthz")
     def healthz():
         return "ok", 200
+
+    @app.get("/favicon.ico")
+    def favicon():
+        return send_from_directory(
+            app.static_folder, "favicon.svg", mimetype="image/svg+xml"
+        )
 
     return app
