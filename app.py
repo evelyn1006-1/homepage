@@ -1,0 +1,57 @@
+import os
+
+from flask import Flask, render_template, request, abort
+from werkzeug.middleware.proxy_fix import ProxyFix
+from dotenv import load_dotenv
+
+load_dotenv()
+
+FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
+ALLOWED_HOSTS = {
+    h.strip().lower()
+    for h in os.getenv(
+        "ALLOWED_HOSTS",
+        "princessevelyn.com,www.princessevelyn.com,localhost,127.0.0.1",
+    ).split(",")
+    if h.strip()
+}
+
+
+def get_request_host():
+    host = request.host or ""
+    return host.split(":")[0].lower()
+
+
+def is_safe_host(host):
+    return host in ALLOWED_HOSTS
+
+
+def create_app():
+    app = Flask(__name__)
+    if FLASK_SECRET_KEY:
+        app.config["SECRET_KEY"] = FLASK_SECRET_KEY
+
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
+    @app.before_request
+    def enforce_host_check():
+        if ALLOWED_HOSTS and not is_safe_host(get_request_host()):
+            abort(400)
+
+    @app.after_request
+    def add_security_headers(response):
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        return response
+
+    @app.get("/")
+    def index():
+        return render_template("index.html")
+
+    @app.get("/healthz")
+    def healthz():
+        return "ok", 200
+
+    return app
