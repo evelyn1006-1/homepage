@@ -17,4 +17,5 @@ sudo nginx -t
 sudo systemctl reload nginx
 sudo systemctl daemon-reload
 
+sudo systemctl enable --now homepage
 sudo systemctl restart homepage
