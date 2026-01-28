@@ -2,15 +2,15 @@
 set -euo pipefail
 
 APP_DIR="/home/evelyn/homepage"
-VENV="$APP_DIR/.venv"
+PYTHON="/usr/local/bin/python3.14"
 
 cd "$APP_DIR"
 
-"$VENV/bin/pip" install --upgrade pip wheel --quiet
+sudo "$PYTHON" -m pip install --upgrade pip wheel --quiet --root-user-action=ignore --break-system-packages
 if [[ -f requirements.txt ]]; then
-  "$VENV/bin/pip" install -r requirements.txt --quiet
+  sudo "$PYTHON" -m pip install -r requirements.txt --quiet --root-user-action=ignore --break-system-packages
 elif [[ -f pyproject.toml ]]; then
-  "$VENV/bin/pip" install . --quiet
+  sudo "$PYTHON" -m pip install . --quiet --root-user-action=ignore --break-system-packages
 fi
 
 sudo nginx -t

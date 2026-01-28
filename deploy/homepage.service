@@ -6,8 +6,8 @@ After=network.target
 User=evelyn
 Group=www-data
 WorkingDirectory=/home/evelyn/homepage
-Environment="PATH=/home/evelyn/homepage/.venv/bin"
-ExecStart=/home/evelyn/homepage/.venv/bin/gunicorn \
+Environment="PATH=/usr/local/bin:/usr/bin"
+ExecStart=/usr/local/bin/gunicorn \
   --config /home/evelyn/homepage/gunicorn.conf.py \
   wsgi:app
 Restart=always
