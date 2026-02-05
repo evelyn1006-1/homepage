@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Internal Server Error</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <style>
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-regular.woff2') }}") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-bold.woff2') }}") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: light;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+        color: #151515;
+        background: radial-gradient(circle at top, #f6efe6, #efe6dc 40%, #e8ddd2 70%, #e2d3c7);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .card {
+        max-width: 560px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12);
+        border-radius: 22px;
+        padding: 32px 34px;
+        text-align: left;
+      }
+
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.7rem;
+        color: #5d4b42;
+        margin: 0 0 12px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: 2.4rem;
+        font-weight: 600;
+      }
+
+      .lead {
+        margin: 0 0 18px;
+        line-height: 1.6;
+        color: #3a2f29;
+        font-family: "Comic Neue", "Comic Sans MS", cursive;
+        font-size: 1.05rem;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(93, 75, 66, 0.2);
+        background: #fff6ee;
+        color: #3a2f29;
+        text-decoration: none;
+        font-family: "Comic Neue", "Comic Sans MS", cursive;
+        font-weight: 700;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .cta:hover,
+      .cta:focus-visible {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      .note {
+        margin-top: 16px;
+        color: #5d4b42;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      .note a {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .note a:hover {
+        text-decoration: underline;
+      }
+
+      .handle {
+        font-weight: 700;
+      }
+
+      @media (max-width: 600px) {
+        .card {
+          padding: 24px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <p class="eyebrow">princessevelyn.com</p>
+      <h1>500</h1>
+      <p class="lead">Princess Evelyn might have made some mistakes in her code and she's sorry! 🥺</p>
+      <a class="cta" href="/">← Back home</a>
+      <p class="note">
+        If this keeps happening, let her know at
+        <a href="mailto:me@princessevelyn.com">me@princessevelyn.com</a>
+        or <span class="handle">evelyn1006_</span> on Discord, alright? She'll make sure to fix it as soon as possible~ 🧡
+      </p>
+    </main>
+  </body>
+</html>
