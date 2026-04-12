@@ -56,8 +56,8 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-}
 
+}
 server {
     if ($host = www.princessevelyn.com) {
         return 301 https://$host$request_uri;
@@ -73,5 +73,8 @@ server {
 
     listen 80;
     return 404; # managed by Certbot
+
+
+
 
 }
