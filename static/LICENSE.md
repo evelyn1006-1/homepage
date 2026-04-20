@@ -1,4 +1,4 @@
-# Princess Evelyn's License 1.2.0
+# Princess Evelyn's License 1.3.0
 
 <https://princessevelyn.com/licenses/1>
 
@@ -7,8 +7,8 @@
 The licensor grants you a copyright license for the
 software to do everything you might do with the software
 that would otherwise infringe the licensor's copyright
-in it for any permitted purpose.  However, you may
-only distribute the software according to [Distribution
+in it for any lawful purpose.  However, you may only
+distribute the software according to [Distribution
 License](#distribution-license) and make changes or new works
 based on the software according to [Changes and New Works
 License](#changes-and-new-works-license).
@@ -20,6 +20,11 @@ to distribute copies of the software.  Your license
 to distribute covers distributing the software with
 changes and new works permitted by [Changes and New Works
 License](#changes-and-new-works-license).
+
+Each time you distribute the software, or a work based on
+the software, every recipient automatically receives a
+license from the licensor to use, modify, and distribute
+the software under these terms.
 
 ## Source Code Availability
 
@@ -61,8 +66,7 @@ backend service, processing pipeline, or other underlying utility.
 ## Changes and New Works License
 
 The licensor grants you an additional copyright license to
-make changes and new works based on the software for any
-permitted purpose.
+make changes and new works based on the software for any purpose.
 
 ## Copyleft
 
@@ -73,9 +77,12 @@ license. This is sometimes described as a share-alike requirement.
 
 ## Patent License
 
-The licensor grants you a patent license for the software that
-covers patent claims the licensor can license, or becomes able
-to license, that you would infringe by using the software.
+The licensor grants you a non-exclusive, worldwide, royalty-free
+patent license under patent claims the licensor can license, or
+later becomes able to license, that you would infringe by making,
+having made, using, running, modifying, distributing, selling,
+offering for sale, importing, or otherwise transferring the
+software or works based on the software.
 
 ## Fair Use
 
@@ -86,8 +93,9 @@ law. These terms do not limit them.
 
 These terms do not allow you to sublicense or transfer any of
 your licenses to anyone else, or prevent the licensor from
-granting licenses to anyone else.  These terms do not imply
-any other licenses.
+granting licenses to anyone else. These terms do not prevent
+the licensor from granting licenses to anyone else. These terms
+do not imply any other licenses.
 
 ## Patent Defense
 
