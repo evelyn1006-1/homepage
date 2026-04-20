@@ -1,12 +1,6 @@
-# Princess Evelyn's License 1.1.0
+# Princess Evelyn's License 1.2.0
 
 <https://princessevelyn.com/licenses/1>
-
-## Acceptance
-
-In order to get any license under these terms, you must agree
-to them as both strict obligations and conditions to all
-your licenses.
 
 ## Copyright License
 
@@ -26,6 +20,20 @@ to distribute copies of the software.  Your license
 to distribute covers distributing the software with
 changes and new works permitted by [Changes and New Works
 License](#changes-and-new-works-license).
+
+## Source Code Availability
+
+If you distribute the software in any form that is not source
+code, you must also provide the corresponding source code
+under these same terms. The corresponding source code means the preferred form of the software for making changes to it,
+together with any files, scripts, and interface definitions
+needed to build, install, run, and modify the software, but
+excluding general-purpose tools and standard system components
+that are not part of the software.
+
+You may provide corresponding source code with the software, or
+through a clear and publicly documented way to obtain it at no
+more than a reasonable cost of distribution.
 
 ## Notices
 
