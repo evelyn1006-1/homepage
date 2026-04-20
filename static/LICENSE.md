@@ -1,4 +1,4 @@
-# Princess Evelyn's License 1.3.0
+# Princess Evelyn's License 1.3.1
 
 <https://princessevelyn.com/license>
 
@@ -93,9 +93,8 @@ law. These terms do not limit them.
 
 These terms do not allow you to sublicense or transfer any of
 your licenses to anyone else, or prevent the licensor from
-granting licenses to anyone else. These terms do not prevent
-the licensor from granting licenses to anyone else. These terms
-do not imply any other licenses.
+granting licenses to anyone else. These terms do not imply
+ any other licenses.
 
 ## Patent Defense
 
