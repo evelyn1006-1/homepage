@@ -1,6 +1,6 @@
 # Princess Evelyn's License 1.3.0
 
-<https://princessevelyn.com/licenses/1>
+<https://princessevelyn.com/license>
 
 ## Copyright License
 
