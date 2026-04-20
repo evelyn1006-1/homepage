@@ -1,4 +1,4 @@
-# Princess Evelyn's License 1.0.1
+# Princess Evelyn's License 1.1.0
 
 <https://princessevelyn.com/licenses/1>
 
@@ -67,44 +67,6 @@ license. This is sometimes described as a share-alike requirement.
 The licensor grants you a patent license for the software that
 covers patent claims the licensor can license, or becomes able
 to license, that you would infringe by using the software.
-
-## Noncommercial
-
-Any noncommercial purpose, defined as either personal use or use
-by a noncommercial organization, is a permitted purpose. 
-
-## Noncompete for Commerical Purposes
-
-Any commercial purpose is a permitted purpose, except for
-providing to others any product that competes with the software.
-
-## Personal Uses
-
-Personal use for research, experiment, and testing for
-the benefit of public knowledge, personal study, private
-entertainment, hobby projects, amateur pursuits, or religious
-observance, without any anticipated commercial application,
-is use for a permitted purpose.
-
-## Noncommercial Organizations
-
-Use by any charitable organization, educational institution,
-public research organization, public safety or health
-organization, environmental protection organization,
-or government institution is use for a permitted purpose
-regardless of the source of funding or obligations resulting
-from the funding.
-
-## Competition
-
-If you use this software to market a product as a substitute
-for the functionality or value of the software, it competes
-with the software. A product may compete regardless how it is
-designed or deployed. For example, a product may compete even
-if it provides its functionality via any kind of interface
-(including services, libraries or plug-ins), even if it is
-ported to a different platforms or programming languages,
-and even if it is provided free of charge.
 
 ## Fair Use
 
