@@ -25,7 +25,8 @@ License](#changes-and-new-works-license).
 
 If you distribute the software in any form that is not source
 code, you must also provide the corresponding source code
-under these same terms. The corresponding source code means the preferred form of the software for making changes to it,
+under these same terms. The corresponding source code means
+the preferred form of the software for making changes to it,
 together with any files, scripts, and interface definitions
 needed to build, install, run, and modify the software, but
 excluding general-purpose tools and standard system components
