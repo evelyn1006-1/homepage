@@ -1,4 +1,4 @@
-# Princess Evelyn's License 1.0.0
+# Princess Evelyn's License 1.0.1
 
 <https://princessevelyn.com/licenses/1>
 
@@ -39,16 +39,15 @@ with the software. For example:
 
 ## Attribution Preservation
 
-If you distribute or deploy the software in a form that presents
-a user interface directly to end users, you must preserve, without
-removal, concealment, or material alteration, all attribution
-notices included in that interface by the licensor. This obligation
-applies only where the software itself — and not merely its output
-or processed results — is directly presented to or operated by end
-users. It does not apply where the software functions solely as a
-library, backend service, processing pipeline, or other utility in
-which end users interact only with a product built on top of the
-software rather than with the software directly.
+If you distribute or deploy the software in a form that directly
+presents its user interface to end users, you must preserve all
+attribution notices contained in that interface, and may not remove,
+conceal, or materially alter them.
+
+This requirement applies only where end users directly interact with
+the software itself, and not where they interact only with its output
+or with a separate product that uses the software as a library,
+backend service, processing pipeline, or other underlying utility.
 
 ## Changes and New Works License
 
@@ -56,11 +55,12 @@ The licensor grants you an additional copyright license to
 make changes and new works based on the software for any
 permitted purpose.
 
-## Share Alike
+## Copyleft
 
-Any distribution of the software, or changes and new works based 
-on the software, must be made under these same terms. You may not 
-distribute the software under any other license.
+This license is copyleft: if you distribute the software, or any
+modified or derivative version of it, you must do so under these
+same terms. You may not distribute the software under any other
+license. This is sometimes described as a share-alike requirement.
 
 ## Patent License
 
