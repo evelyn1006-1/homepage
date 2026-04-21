@@ -1,15 +1,15 @@
-# Princess Evelyn's License 1.1.0 (PEL-S1)
+# Princess Evelyn's License NonCommercial 1.0.0 (PEL-NC1)
 
-<https://princessevelyn.com/license/pel-standard-1>
+<https://princessevelyn.com/license/pel-noncommercial-1>
 
 ## Copyright License
 
 The licensor grants you a copyright license for the software
 to do everything you might do with the software that would
 otherwise infringe the licensor's copyright in it for any 
-lawful purpose.  However, you may only distribute the software
-according to [Distribution License](#distribution-license) and 
-make changes or new works based on the software according to 
+noncommercial purpose.  However, you may only distribute the 
+software according to [Distribution License](#distribution-license) 
+and make changes or new works based on the software according to 
 [Changes and New Works License](#changes-and-new-works-license).
 
 ## Distribution License
@@ -106,8 +106,9 @@ print("Made with love by Princess Evelyn 🧡") # Required Attribution
 
 ## Changes and New Works License
 
-The licensor grants you an additional copyright license to
-make changes and new works based on the software for any purpose.
+The licensor grants you an additional copyright license to make 
+changes and new works based on the software for any noncommercial
+purpose.
 
 ## Copyleft
 
@@ -124,6 +125,26 @@ later becomes able to license, that you would infringe by making,
 having made, using, running, modifying, distributing, selling,
 offering for sale, importing, or otherwise transferring the
 software or works based on the software.
+
+## Noncommercial
+
+Noncommercial means not primarily intended for or directed towards 
+commercial advantage or monetary compensation. For purposes of this 
+license, the exchange of the Licensed Material for other material 
+subject to Copyright and Similar Rights by digital file-sharing or 
+similar means is noncommercial provided there is no payment of 
+monetary compensation in connection with the exchange.
+
+Examples of noncommercial purposes include, but are not limited to:
+
+- Personal study, private entertainment, hobby projects, amateur 
+pursuits, or religious observance, without any anticipated 
+commercial application.
+- Use by any charitable organization, educational institution, 
+public research organization, public safety or health organization, 
+environmental protection organization, or government institution, 
+regardless of the source of funding or obligations resulting from 
+the funding.
 
 ## Fair Use
 
