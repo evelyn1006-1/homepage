@@ -79,10 +79,10 @@ def create_app():
     def cat():
         return render_template("cat.html")
 
-    @app.get("/license")
+    @app.get("/license/pel-s1")
     def license1():
         return send_from_directory(
-            app.static_folder, "LICENSE.md", mimetype="text/plain"
+            app.static_folder, "PEL-S1.md", mimetype="text/plain"
         )        
 
     @app.get("/forbidden")
