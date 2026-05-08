@@ -79,17 +79,11 @@ def create_app():
     def cat():
         return render_template("cat.html")
 
-    @app.get("/license/pel-standard-1")
+    @app.get("/license/pel-1")
     def license1():
         return send_from_directory(
-            app.static_folder, "PEL-S1.md", mimetype="text/plain"
+            app.static_folder, "PEL-1.md", mimetype="text/plain"
         )        
-
-    @app.get("/license/pel-noncommercial-1")
-    def license2():
-        return send_from_directory(
-            app.static_folder, "PEL-NC1.md", mimetype="text/plain"
-        )     
 
     @app.get("/forbidden")
     def test_403():
