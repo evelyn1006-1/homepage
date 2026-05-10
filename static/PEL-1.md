@@ -128,7 +128,7 @@ tool, or only as part of an internal development workflow.
 
 ## Required Attributions
 
-A required attribution is any attribution notice indicated by either the
+A "required attribution" is any attribution notice indicated by either the
 `required-attribution` HTML class or a line containing `Required
 Attribution` as a comment within source code that the licensor provided
 with the software. In non-HTML or adapted interfaces, notices marked in
@@ -137,15 +137,10 @@ either way remain required attributions.
 For purposes of this license, a Creative Commons-style attribution means an
 attribution given in any reasonable manner appropriate to the medium,
 means, and context that:
-
-1. Identifies, in substance, the same credited person or project as the
-   original required attribution;
-2. Is reasonably visible to end users who directly interact with the
-   relevant interface;
+1. Identifies, in substance, the same credited person or project as the original required attribution;
+2. Is reasonably visible to end users who directly interact with the relevant interface;
 3. Is not hidden, obscured, or made unreasonably difficult to locate; and
-4. Does not state or imply that the credited person or project endorses
-   you, your work, your modifications, your distribution, your deployment,
-   or your use of the software.
+4. Does not state or imply that the credited person or project endorses you, your work, your modifications, your distribution, your deployment, or your use of the software.
 
 A CC-style attribution may appear in any reasonable attribution area,
 including an About, Credits, Acknowledgments, footer, settings, help,
@@ -184,7 +179,7 @@ a share-alike requirement.
 ## Permitted alternative licenses
 
 The following licenses are permitted alternatives to this license:
-- GNU Affero General Public License (AGPL) version 3 or later.
+- GNU Affero General Public License (AGPL) version 3 or later. 
 
 You may distribute the software under a permitted alternative license,
 provided that you include the [Attribution
@@ -195,6 +190,32 @@ Additional Term as per Section 7(b) of the AGPL license document.
 
 <https://www.gnu.org/licenses/agpl-3.0.en.html>
 
+## Additional Requirements for User Products
+
+A "User Product" is either (1) a "consumer product", which means any
+tangible personal property for which personal, family, or household use is
+a significant ordinary or intended use, or (2) anything designed or sold
+for incorporation into a dwelling. In determining whether a product is a
+consumer product, doubtful cases shall be resolved in favor of coverage.
+
+If you distribute the software in non-source form in, with, or specifically
+for use in a User Product, as part of a transaction in which the recipient
+receives temporary or permanent possession and use of that User Product,
+then the corresponding source code you provide must be accompanied by any
+product-specific information required to install and execute modified
+versions of the software on that User Product. The information provided
+must be sufficient to ensure that the User Product does not prevent or
+interfere with execution of the modified versions of the software in
+non-source form solely because the software has been modified.
+
+This requirement does not require you to provide warranty, support,
+updates, network access, or continued service for modified versions. You
+may deny network access where the modification materially and adversely
+affects the operation of the network or violates generally applicable
+communication protocols. This requirement does not apply where neither you
+nor any third party has the ability to install modified non-source code on
+the User Product.
+
 ## License for Separated Non-Interface Components
 
 The licensor grants you an additional copyright license to copy, modify,
@@ -203,11 +224,11 @@ the GNU General Public License version 3 (GPLv3) or later, or the GNU
 Affero General Public License version 3 or later (AGPLv3), instead of these
 terms, if:
 
-1. The component does not include, adapt, or derive from any part of the
-   software's user interface.
+1. The component does not include, adapt, or derive from any part of the software's user interface.
+
 2. The component does not include any required attributions.
-3. The component is reasonably separable from the software as a whole and
-   can be used independently for a general software purpose.
+
+3. The component is reasonably separable from the software as a whole and can be used independently for a general software purpose.
 
 This additional license applies only to the separated component. It does
 not apply to the software as a whole, any modified version of it, or any
@@ -221,36 +242,33 @@ additional permission under its Section 7.
 
 ## Additional Terms
 
-Additional permissions are terms that supplement the terms of this license
-by making exceptions from one or more of its conditions. They should be
-treated as though they were included in this license. When you distribute a
-copy of the software, you may remove any additional permissions from that
-copy, or from any part of it. You may place additional permissions on
-material, added by you to the software, for which you have or can give
-appropriate copyright permission.
+"Additional permissions" are terms that supplement the terms of this
+license by making exceptions from one or more of its conditions. They
+should be treated as though they were included in this license. When you
+distribute a copy of the software, you may remove any additional
+permissions from that copy, or from any part of it. You may place
+additional permissions on material, added by you to the software, for which
+you have or can give appropriate copyright permission.
 
 For material you add to the software, you may supplement the terms of this
 license with the following terms:
 
-1. Disclaiming warranty or limiting liability differently from the terms of
-   this License (see [No Liability](#no-liability)); or
-2. Requiring preservation of permitted (see later in this section) legal
-   notices or author attributions in that material, in addition to what is
-   included in these terms; or
-3. Prohibiting misrepresentation of the origin of that material, or
-   requiring that modified versions of such material be marked in
-   reasonable ways as different from the original version; or
-4. Limiting the use for publicity purposes of names of licensors or authors
-   of the material; or
-5. Declining to grant rights under trademark law for use of some trade
-   names, trademarks, or service marks; or
-6. Requiring indemnification of licensors and authors of that material by
-   anyone who distributes the material (or modified versions of it) with
-   contractual assumptions of liability to the recipient, for any liability
-   that these contractual assumptions directly impose on those licensors
-   and authors.
+a) Disclaiming warranty or limiting liability differently from the terms of
+this License (see [No Liability](#no-liability)); or b) Requiring
+preservation of permitted (see later in this section) legal notices or
+author attributions in that material, in addition to what is included in
+these terms; or c) Prohibiting misrepresentation of the origin of that
+material, or requiring that modified versions of such material be marked in
+reasonable ways as different from the original version; or d) Limiting the
+use for publicity purposes of names of licensors or authors of the
+material; or e) Declining to grant rights under trademark law for use of
+some trade names, trademarks, or service marks; or f) Requiring
+indemnification of licensors and authors of that material by anyone who
+distributes the material (or modified versions of it) with contractual
+assumptions of liability to the recipient, for any liability that these
+contractual assumptions directly impose on those licensors and authors.
 
-For 2, you must not require the preservation of an unreasonable amount of
+For (b), you must not require the preservation of an unreasonable amount of
 notices or attributions, nor may you require that the wording, formatting,
 styling, placement, design of these attributions remain unchanged.
 
