@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, abort, send_from_directory, redirect
 from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
+from pathlib import Path
 
 load_dotenv()
 
@@ -84,6 +85,18 @@ def create_app():
         return send_from_directory(
             app.static_folder, "PEL-1.md", mimetype="text/plain"
         )        
+
+    @app.get("/videos/1")
+    def video1():
+        return send_from_directory(
+            Path(app.static_folder) / "videos", "recording1.mp4", mimetype="video/mp4"
+        )        
+
+    @app.get("/videos/2")
+    def video2():
+        return send_from_directory(
+            Path(app.static_folder) / "videos", "recording2.mp4", mimetype="video/mp4"
+        )  
 
     @app.get("/forbidden")
     def test_403():
