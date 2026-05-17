@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Door Classifier</title>
+    <meta name="description" content="Check a Corridor door hint and see whether it points good, bad, neutral, or uncertain.">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <meta property="og:title" content="Door Classifier">
+    <meta property="og:description" content="Check a Corridor door hint and see whether it points good, bad, neutral, or uncertain.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:site_name" content="Princess Evelyn">
+    <meta property="og:image" content="{{ preview_image }}">
+    <meta property="og:image:secure_url" content="{{ preview_image }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1850">
+    <meta property="og:image:height" content="1201">
+    <meta property="og:image:alt" content="Door Classifier preview image">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Door Classifier">
+    <meta name="twitter:description" content="Check a Corridor door hint and see whether it points good, bad, neutral, or uncertain.">
+    <meta name="twitter:image" content="{{ preview_image }}">
+    <meta name="twitter:image:alt" content="Door Classifier preview image">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <style>
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-regular.woff2') }}") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-bold.woff2') }}") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: dark;
+        --ink: #f8f4ea;
+        --muted: #cfc7b6;
+        --panel: rgba(23, 22, 25, 0.88);
+        --panel-strong: rgba(38, 36, 40, 0.95);
+        --line: rgba(248, 244, 234, 0.18);
+        --good: #58d68d;
+        --neutral: #b9bdc7;
+        --bad: #ff6b6b;
+        --maybe-good: #d8c35a;
+        --maybe-bad: #d48b5a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Comic Neue", "Comic Sans MS", cursive;
+        color: var(--ink);
+        background:
+          linear-gradient(rgba(12, 12, 15, 0.62), rgba(12, 12, 15, 0.82)),
+          repeating-linear-gradient(
+            90deg,
+            #221917 0,
+            #221917 18px,
+            #2c201d 18px,
+            #2c201d 34px
+          );
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, transparent 0 12%, rgba(0, 0, 0, 0.28) 12% 13%, transparent 13% 87%, rgba(0, 0, 0, 0.28) 87% 88%, transparent 88%),
+          linear-gradient(180deg, rgba(255, 224, 151, 0.12), transparent 34%, rgba(0, 0, 0, 0.35));
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(940px, 100%);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 32px 20px;
+        display: grid;
+        align-content: center;
+        gap: 20px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        color: var(--muted);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .home-link {
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+
+      .home-link:hover,
+      .home-link:focus-visible {
+        border-color: currentColor;
+      }
+
+      .tool {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+        padding: 28px;
+      }
+
+      h1 {
+        margin: 0 0 18px;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        line-height: 1;
+        letter-spacing: 0;
+        font-weight: 700;
+      }
+
+      form {
+        display: block;
+      }
+
+      label {
+        display: block;
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .input-wrap {
+        min-width: 0;
+      }
+
+      input {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid rgba(248, 244, 234, 0.28);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--ink);
+        padding: 11px 13px;
+        font: inherit;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: #ffd36f;
+        box-shadow: 0 0 0 3px rgba(255, 211, 111, 0.18);
+      }
+
+      .results {
+        margin-top: 22px;
+      }
+
+      .empty {
+        color: var(--muted);
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .empty-note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .single-result {
+        border: 1px solid var(--line);
+        border-left-width: 8px;
+        border-radius: 8px;
+        background: var(--panel-strong);
+        padding: 24px;
+      }
+
+      .single-result.good {
+        border-left-color: var(--good);
+      }
+
+      .single-result.neutral {
+        border-left-color: var(--neutral);
+      }
+
+      .single-result.bad {
+        border-left-color: var(--bad);
+      }
+
+      .single-result.uncertain-good {
+        border-left-color: var(--maybe-good);
+      }
+
+      .single-result.uncertain-bad {
+        border-left-color: var(--maybe-bad);
+      }
+
+      .single-label {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 0 12px;
+        border-radius: 999px;
+        padding: 6px 12px;
+        background: var(--neutral);
+        color: #161416;
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+
+      .single-result.good .single-label {
+        background: var(--good);
+      }
+
+      .single-result.bad .single-label {
+        background: var(--bad);
+      }
+
+      .single-result.uncertain-good .single-label {
+        background: var(--maybe-good);
+      }
+
+      .single-result.uncertain-bad .single-label {
+        background: var(--maybe-bad);
+      }
+
+      .single-phrase {
+        margin: 0;
+        color: var(--ink);
+        font-size: clamp(1.35rem, 4vw, 2.35rem);
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+      }
+
+      .summary {
+        margin: 0 0 12px;
+        color: var(--muted);
+      }
+
+      .match-list {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .match {
+        display: grid;
+        grid-template-columns: minmax(120px, 190px) 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 13px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .badge {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        border-radius: 999px;
+        padding: 4px 9px;
+        color: #161416;
+        background: var(--neutral);
+        font-size: 0.86rem;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .badge.good {
+        background: var(--good);
+      }
+
+      .badge.bad {
+        background: var(--bad);
+      }
+
+      .badge.uncertain-good {
+        background: var(--maybe-good);
+      }
+
+      .badge.uncertain-bad {
+        background: var(--maybe-bad);
+      }
+
+      .phrase {
+        margin: 0;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 680px) {
+        body::before {
+          background: linear-gradient(180deg, rgba(255, 224, 151, 0.12), transparent 34%, rgba(0, 0, 0, 0.35));
+        }
+
+        .shell {
+          padding: 20px 14px;
+          align-content: start;
+        }
+
+        .topbar,
+        .match {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          display: grid;
+          align-items: start;
+        }
+
+        .nav-links {
+          justify-content: flex-start;
+        }
+
+        .tool {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar" aria-label="Classifier navigation">
+        <a class="home-link" href="/">Back home</a>
+        <div class="nav-links">
+          <a class="home-link" href="{{ url_for('door_classifier_edit') }}">Edit data</a>
+          <span>Door Classifier</span>
+        </div>
+      </nav>
+
+      <section class="tool" aria-labelledby="page-title">
+        <h1 id="page-title">Door Classifier</h1>
+
+        <form action="{{ url_for('door_classifier') }}" method="get" data-classifier-form>
+          <div class="input-wrap">
+            <label for="hint">Hint text</label>
+            <input
+              id="hint"
+              name="hint"
+              type="search"
+              value="{{ query }}"
+              placeholder="The mist thins. Trust that."
+              autocomplete="off"
+              autofocus
+              data-hint-input
+            >
+          </div>
+        </form>
+
+        <div class="results" aria-live="polite" data-results>
+          {% if not query %}
+            <p class="empty">Enter a door hint.</p>
+          {% elif matches|length == 0 %}
+            <p class="empty">No match for "{{ query }}".</p>
+            <p class="empty-note">If you're sure this hint exists, contact Evelyn so she can add it.</p>
+          {% elif matches|length == 1 %}
+            {% set match = matches[0] %}
+            <article class="single-result {{ match.tone }}">
+              <p class="single-label">{{ match.label }}</p>
+              <p class="single-phrase">{{ match.phrase }}</p>
+            </article>
+          {% else %}
+            <p class="summary">{{ matches|length }} matches for "{{ query }}".</p>
+            <ul class="match-list">
+              {% for match in matches %}
+                <li class="match">
+                  <span class="badge {{ match.tone }}">{{ match.label }}</span>
+                  <p class="phrase">{{ match.phrase }}</p>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+    <script>
+      const hints = {{ hints | tojson }};
+      const form = document.querySelector("[data-classifier-form]");
+      const input = document.querySelector("[data-hint-input]");
+      const results = document.querySelector("[data-results]");
+      const apostrophePattern = /['’]/g;
+      const nonWordPattern = /[^\p{L}\p{N}_]+/gu;
+      const spacePattern = /\s+/g;
+
+      const normalizeHint = (value) => {
+        return value
+          .toLocaleLowerCase()
+          .replace(apostrophePattern, "")
+          .replace(nonWordPattern, " ")
+          .replace(spacePattern, " ")
+          .trim();
+      };
+
+      const updateAddress = (query) => {
+        const url = new URL(window.location.href);
+        if (query) {
+          url.searchParams.set("hint", query);
+        } else {
+          url.searchParams.delete("hint");
+        }
+        window.history.replaceState({}, "", url);
+      };
+
+      const appendEmptyState = (query) => {
+        const message = document.createElement("p");
+        message.className = "empty";
+
+        if (!query) {
+          message.textContent = "Enter a door hint.";
+          results.append(message);
+          return;
+        }
+
+        message.textContent = `No match for "${query}".`;
+        const note = document.createElement("p");
+        note.className = "empty-note";
+        note.textContent = "If you're sure this hint exists, contact Evelyn so she can add it.";
+        results.append(message, note);
+      };
+
+      const appendSingleMatch = (match) => {
+        const card = document.createElement("article");
+        card.className = `single-result ${match.tone}`;
+
+        const label = document.createElement("p");
+        label.className = "single-label";
+        label.textContent = match.label;
+
+        const phrase = document.createElement("p");
+        phrase.className = "single-phrase";
+        phrase.textContent = match.phrase;
+
+        card.append(label, phrase);
+        results.append(card);
+      };
+
+      const appendMatchList = (matches, query) => {
+        const summary = document.createElement("p");
+        summary.className = "summary";
+        summary.textContent = `${matches.length} matches for "${query}".`;
+
+        const list = document.createElement("ul");
+        list.className = "match-list";
+
+        matches.forEach((match) => {
+          const item = document.createElement("li");
+          item.className = "match";
+
+          const badge = document.createElement("span");
+          badge.className = `badge ${match.tone}`;
+          badge.textContent = match.label;
+
+          const phrase = document.createElement("p");
+          phrase.className = "phrase";
+          phrase.textContent = match.phrase;
+
+          item.append(badge, phrase);
+          list.append(item);
+        });
+
+        results.append(summary, list);
+      };
+
+      const renderMatches = () => {
+        const query = input.value;
+        const normalizedQuery = normalizeHint(query);
+        const matches = normalizedQuery
+          ? hints.filter((hint) => hint.normalized.includes(normalizedQuery))
+          : [];
+
+        results.replaceChildren();
+        updateAddress(query);
+
+        if (!query) {
+          appendEmptyState("");
+        } else if (matches.length === 0) {
+          appendEmptyState(query);
+        } else if (matches.length === 1) {
+          appendSingleMatch(matches[0]);
+        } else {
+          appendMatchList(matches, query);
+        }
+      };
+
+      if (form && input && results) {
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          renderMatches();
+        });
+        input.addEventListener("input", renderMatches);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Door Data Editor</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <style>
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-regular.woff2') }}") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Comic Neue";
+        src: url("{{ url_for('static', filename='fonts/comic-neue-bold.woff2') }}") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: dark;
+        --ink: #f8f4ea;
+        --muted: #cfc7b6;
+        --panel: rgba(23, 22, 25, 0.9);
+        --panel-strong: rgba(37, 35, 39, 0.96);
+        --line: rgba(248, 244, 234, 0.18);
+        --good: #58d68d;
+        --neutral: #b9bdc7;
+        --bad: #ff6b6b;
+        --maybe-good: #d8c35a;
+        --maybe-bad: #d48b5a;
+        --gold: #ffd36f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Comic Neue", "Comic Sans MS", cursive;
+        color: var(--ink);
+        background:
+          linear-gradient(rgba(12, 12, 15, 0.62), rgba(12, 12, 15, 0.84)),
+          repeating-linear-gradient(
+            90deg,
+            #221917 0,
+            #221917 18px,
+            #2c201d 18px,
+            #2c201d 34px
+          );
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1100px, 100%);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 28px 20px 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+        color: var(--muted);
+      }
+
+      .nav-links {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .text-link {
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+
+      .text-link:hover,
+      .text-link:focus-visible {
+        border-color: currentColor;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+        padding: 24px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: end;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 4rem);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .status {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.07);
+        margin: 0 0 16px;
+      }
+
+      .status.error {
+        border-color: rgba(255, 107, 107, 0.48);
+        color: #ffd6d6;
+      }
+
+      .status.success {
+        border-color: rgba(88, 214, 141, 0.48);
+        color: #d7ffe6;
+      }
+
+      .unlock-form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: end;
+        margin-top: 18px;
+      }
+
+      label {
+        display: block;
+        margin: 0 0 8px;
+        color: var(--muted);
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid rgba(248, 244, 234, 0.28);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--ink);
+        padding: 10px 12px;
+        font: inherit;
+        outline: none;
+      }
+
+      input {
+        min-height: 48px;
+      }
+
+      textarea {
+        min-height: 44px;
+        resize: vertical;
+        line-height: 1.35;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(255, 211, 111, 0.18);
+      }
+
+      button {
+        min-height: 44px;
+        border: 1px solid var(--gold);
+        border-radius: 6px;
+        background: var(--gold);
+        color: #241610;
+        padding: 0 14px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:hover,
+      button:focus-visible {
+        background: #ffe19a;
+      }
+
+      .ghost-button {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(248, 244, 234, 0.28);
+        color: var(--ink);
+      }
+
+      .ghost-button:hover,
+      .ghost-button:focus-visible {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .danger-button {
+        border-color: rgba(255, 107, 107, 0.5);
+        background: rgba(255, 107, 107, 0.12);
+        color: #ffe6e6;
+      }
+
+      .danger-button:hover,
+      .danger-button:focus-visible {
+        background: rgba(255, 107, 107, 0.2);
+      }
+
+      .actions {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin: 18px -24px 20px;
+        padding: 12px 24px;
+        background: rgba(17, 16, 19, 0.92);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(12px);
+      }
+
+      .totals {
+        color: var(--muted);
+      }
+
+      .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .category-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .category {
+        border: 1px solid var(--line);
+        border-left-width: 8px;
+        border-radius: 8px;
+        background: var(--panel-strong);
+        padding: 16px;
+      }
+
+      .category.good {
+        border-left-color: var(--good);
+      }
+
+      .category.neutral {
+        border-left-color: var(--neutral);
+      }
+
+      .category.bad {
+        border-left-color: var(--bad);
+      }
+
+      .category.uncertain-good {
+        border-left-color: var(--maybe-good);
+      }
+
+      .category.uncertain-bad {
+        border-left-color: var(--maybe-bad);
+      }
+
+      .category-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: start;
+        margin-bottom: 14px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.4rem;
+      }
+
+      .category-description {
+        margin: 4px 0 0;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .count {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 10px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .rows {
+        display: grid;
+        gap: 8px;
+      }
+
+      .hint-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: start;
+      }
+
+      .category-footer {
+        margin-top: 10px;
+      }
+
+      .empty-category {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          padding: 20px 14px 32px;
+        }
+
+        .topbar,
+        .hero,
+        .unlock-form,
+        .actions,
+        .category-header,
+        .hint-row {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar,
+        .hero,
+        .actions {
+          display: grid;
+          align-items: start;
+        }
+
+        .nav-links {
+          justify-content: flex-start;
+        }
+
+        .panel {
+          padding: 18px;
+        }
+
+        .actions {
+          margin-inline: -18px;
+          padding-inline: 18px;
+        }
+
+        button {
+          width: 100%;
+        }
+
+        .action-buttons {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar" aria-label="Editor navigation">
+        <a class="text-link" href="/">Back home</a>
+        <div class="nav-links">
+          <a class="text-link" href="{{ url_for('door_classifier') }}">Classifier</a>
+          <span>Door Data Editor</span>
+        </div>
+      </nav>
+
+      <section class="panel" aria-labelledby="page-title">
+        <div class="hero">
+          <div>
+            <h1 id="page-title">Door Data Editor</h1>
+            <p class="subtitle">Edit hints by category. Blank rows are ignored when saving.</p>
+          </div>
+        </div>
+
+        {% if error %}
+          <p class="status error">{{ error }}</p>
+        {% endif %}
+
+        {% if message %}
+          <p class="status success">{{ message }}</p>
+        {% endif %}
+
+        {% if locked %}
+          {% if configured %}
+            <form class="unlock-form" action="{{ url_for('door_classifier_edit') }}" method="post">
+              <input type="hidden" name="action" value="unlock">
+              <div>
+                <label for="editor_password">Editor password</label>
+                <input
+                  id="editor_password"
+                  name="editor_password"
+                  type="password"
+                  minlength="8"
+                  autocomplete="current-password"
+                  required
+                >
+              </div>
+              <button type="submit">Unlock</button>
+            </form>
+          {% endif %}
+        {% else %}
+          <form action="{{ url_for('door_classifier_edit') }}" method="post" data-editor-form>
+            <input type="hidden" name="action" value="save">
+            <input type="hidden" name="editor_password" value="{{ editor_password }}">
+
+            <div class="actions">
+              <span class="totals" data-total-count></span>
+              <div class="action-buttons">
+                <button
+                  class="ghost-button"
+                  type="submit"
+                  formaction="{{ url_for('door_classifier_export') }}"
+                  formmethod="post"
+                >
+                  Export Plain Text
+                </button>
+                <button type="submit">Save Changes</button>
+              </div>
+            </div>
+
+            <div class="category-grid">
+              {% for category in categories %}
+                <section class="category {{ category.tone }}" data-category="{{ category.key }}">
+                  <header class="category-header">
+                    <div>
+                      <h2>{{ category.label }}</h2>
+                      <p class="category-description">{{ category.description }}</p>
+                    </div>
+                    <span class="count" data-count>{{ category.count }} hints</span>
+                  </header>
+
+                  <div class="rows" data-rows>
+                    {% for value in category["values"] %}
+                      <div class="hint-row">
+                        <textarea name="{{ category.key }}" rows="2">{{ value }}</textarea>
+                        <button class="danger-button" type="button" data-remove>Remove</button>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <p class="empty-category" data-empty{% if category["values"] %} hidden{% endif %}>No hints in this category.</p>
+
+                  <div class="category-footer">
+                    <button class="ghost-button" type="button" data-add>Add Hint</button>
+                  </div>
+                </section>
+              {% endfor %}
+            </div>
+          </form>
+        {% endif %}
+      </section>
+    </main>
+
+    <script>
+      const editorForm = document.querySelector("[data-editor-form]");
+
+      if (editorForm) {
+        const updateCounts = () => {
+          let total = 0;
+          document.querySelectorAll("[data-category]").forEach((category) => {
+            const rows = [...category.querySelectorAll(".hint-row")];
+            const filledRows = rows.filter((row) => {
+              const field = row.querySelector("textarea");
+              return field && field.value.trim();
+            });
+            const count = filledRows.length;
+            total += count;
+            const countLabel = category.querySelector("[data-count]");
+            const emptyLabel = category.querySelector("[data-empty]");
+            countLabel.textContent = count === 1 ? "1 hint" : `${count} hints`;
+            emptyLabel.hidden = rows.length > 0;
+          });
+
+          const totalLabel = document.querySelector("[data-total-count]");
+          totalLabel.textContent = total === 1 ? "1 total hint" : `${total} total hints`;
+        };
+
+        const createRow = (name, value = "") => {
+          const row = document.createElement("div");
+          row.className = "hint-row";
+
+          const textarea = document.createElement("textarea");
+          textarea.name = name;
+          textarea.rows = 2;
+          textarea.value = value;
+          textarea.addEventListener("input", updateCounts);
+
+          const removeButton = document.createElement("button");
+          removeButton.className = "danger-button";
+          removeButton.type = "button";
+          removeButton.dataset.remove = "";
+          removeButton.textContent = "Remove";
+          removeButton.addEventListener("click", () => {
+            row.remove();
+            updateCounts();
+          });
+
+          row.append(textarea, removeButton);
+          return row;
+        };
+
+        document.querySelectorAll("[data-category]").forEach((category) => {
+          const key = category.dataset.category;
+          const rows = category.querySelector("[data-rows]");
+          const addButton = category.querySelector("[data-add]");
+
+          addButton.addEventListener("click", () => {
+            const row = createRow(key);
+            rows.append(row);
+            row.querySelector("textarea").focus();
+            updateCounts();
+          });
+
+          category.querySelectorAll("[data-remove]").forEach((button) => {
+            button.addEventListener("click", () => {
+              button.closest(".hint-row").remove();
+              updateCounts();
+            });
+          });
+
+          category.querySelectorAll("textarea").forEach((textarea) => {
+            textarea.addEventListener("input", updateCounts);
+          });
+        });
+
+        updateCounts();
+      }
+    </script>
+  </body>
+</html>
