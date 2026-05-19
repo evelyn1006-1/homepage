@@ -38,7 +38,10 @@
     "You won't regret it.",
     "Hesitation is for the other door.",
     "The mist thins. Trust that.",
-    "Some mysteries end kindly."
+    "Some mysteries end kindly.",
+    "Fine. This one’s survivable.",
+    "Clean win. Con confirm.",
+    "The threshold offers mercy."
   ],
   "neutral": [
     "Time swallows all choices.",
@@ -70,7 +73,10 @@
     "What do YOU want?",
     "I've got my eye on you.",
     "The answer is... maybe.",
-    "¯\\_(ツ)_/¯"
+    "¯\\_(ツ)_/¯",
+    "Certainty is overrated.",
+    "Probably snacks inside!",
+    "… the dream said maybe…"
   ],
   "bad": [
     "Come on in! More the merrier!",
@@ -111,25 +117,22 @@
     "What waits does not wait long.",
     "The shadows here do not rest.",
     "...bad dreams...scratching...",
-    "Oh no. Oh no no no."
+    "Oh no. Oh no no no.",
+    "This one’s definitely not breathing.",
+    "DOOOOOM!"
   ],
   "inconclusive": {
     "probablyGood": [
       "Gonna work out! I just know it!",
       "Lovely day for a door choice!",
-      "Probably snacks here.",
-      "The threshold offers mercy.",
-      "You’ve got this! I’ve got you!",
-      "Clean win. Con confirm.",
-      "Fine. This one’s survivable."
+      "You’ve got this! I’ve got you!"
     ],
     "probablyBad": [
       "Not all who wander choose well.",
       "DO IT!! ...why are walls wet?",
       "Everything's Great in here!",
-      "Certainty is overrated.",
-      "DOOOOM!!",
-      "This one’s definitely not breathing."
+      "The dark in here is hungry.",
+      "*LOUD NOISES*"
     ]
   }
 }
