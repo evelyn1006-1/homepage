@@ -267,8 +267,8 @@ notices or author attributions in that material, in addition to what is
 included in these terms; or
 
 (c) Prohibiting misrepresentation of the origin of that material, or
-requiring that modified versions of such material be marked in reasonable
-ways as different from the original version; or
+requiring modified versions to be reasonably marked as different from the
+original; or
 
 (d) Limiting the use for publicity purposes of names of licensors or
 authors of the material; or
@@ -276,11 +276,9 @@ authors of the material; or
 (e) Declining to grant rights under trademark law for use of some trade
 names, trademarks, or service marks; or
 
-(f) Requiring indemnification of licensors and authors of that material by
-anyone who distributes the material (or modified versions of it) with
-contractual assumptions of liability to the recipient, for any liability
-that these contractual assumptions directly impose on those licensors and
-authors.
+(f) Requiring distributors who add terms that create liability to protect
+and reimburse the licensors and authors for any liability those terms
+directly impose on them.
 
 For (b), you must not require the preservation of an unreasonable amount of
 notices or attributions, nor may you require that the wording, formatting,
