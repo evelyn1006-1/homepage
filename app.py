@@ -44,31 +44,26 @@ EDITOR_CATEGORIES = [
         "key": "good",
         "label": "Good",
         "tone": "good",
-        "description": "Hints that point to a safe or winning door.",
     },
     {
         "key": "neutral",
         "label": "Neutral",
         "tone": "neutral",
-        "description": "Flavor text that should not strongly imply good or bad.",
     },
     {
         "key": "bad",
         "label": "Bad",
         "tone": "bad",
-        "description": "Hints that suggest danger, loss, or misdirection.",
     },
     {
         "key": "probablyGood",
         "label": "Probably Good",
         "tone": "uncertain-good",
-        "description": "Sparse data that leans good but is not confirmed.",
     },
     {
         "key": "probablyBad",
         "label": "Probably Bad",
         "tone": "uncertain-bad",
-        "description": "Sparse data that leans bad but is not confirmed.",
     },
 ]
 
@@ -117,23 +112,51 @@ def load_door_hints(static_folder):
 
     hints = []
     seen = set()
+
+    def append_hint(phrase, category, label, tone, count_text=None):
+        if not isinstance(phrase, str):
+            return
+
+        normalized = normalize_hint(phrase)
+        signature = (category, phrase, count_text)
+        if signature in seen:
+            return
+
+        seen.add(signature)
+        hint = {
+            "phrase": phrase,
+            "category": category,
+            "tone": tone,
+            "normalized": normalized,
+        }
+        if label is not None:
+            hint["label"] = label
+        if count_text is not None:
+            hint["count_text"] = count_text
+        hints.append(hint)
+
     for category, phrases in categorized_hints:
         for phrase in phrases:
-            normalized = normalize_hint(phrase)
-            signature = (category, phrase)
-            if signature in seen:
-                continue
-
-            seen.add(signature)
-            hints.append(
-                {
-                    "phrase": phrase,
-                    "category": category,
-                    "label": CATEGORY_LABELS[category],
-                    "tone": CATEGORY_TONES[category],
-                    "normalized": normalized,
-                }
+            append_hint(
+                phrase,
+                category,
+                CATEGORY_LABELS[category],
+                CATEGORY_TONES[category],
             )
+
+    for entry in data.get("uncertain", []):
+        if not isinstance(entry, dict):
+            continue
+
+        good_count = entry.get("good", 0)
+        bad_count = entry.get("bad", 0)
+        append_hint(
+            entry.get("hint"),
+            "uncertain",
+            None,
+            "neutral",
+            f"{good_count} / {bad_count}",
+        )
 
     return hints
 
@@ -156,6 +179,33 @@ def get_editor_categories(data):
     return categories
 
 
+def parse_count(value):
+    try:
+        return max(0, int(value))
+    except (TypeError, ValueError):
+        return 0
+
+
+def get_uncertain_entries(data):
+    entries = []
+    for entry in data.get("uncertain", []):
+        if not isinstance(entry, dict):
+            continue
+
+        hint = entry.get("hint")
+        if not isinstance(hint, str) or not hint.strip():
+            continue
+
+        entries.append(
+            {
+                "hint": hint,
+                "good": parse_count(entry.get("good", 0)),
+                "bad": parse_count(entry.get("bad", 0)),
+            }
+        )
+    return entries
+
+
 def collect_editor_values(form, key):
     return [
         value.strip()
@@ -164,8 +214,31 @@ def collect_editor_values(form, key):
     ]
 
 
-def build_door_data_from_form(form):
-    return {
+def collect_uncertain_entries(form):
+    hints = form.getlist("uncertain_hint")
+    good_counts = form.getlist("uncertain_good")
+    bad_counts = form.getlist("uncertain_bad")
+
+    entries = []
+    for index, hint in enumerate(hints):
+        hint = hint.strip()
+        if not hint:
+            continue
+
+        good_count = good_counts[index] if index < len(good_counts) else 0
+        bad_count = bad_counts[index] if index < len(bad_counts) else 0
+        entries.append(
+            {
+                "hint": hint,
+                "good": parse_count(good_count),
+                "bad": parse_count(bad_count),
+            }
+        )
+    return entries
+
+
+def build_door_data_from_form(form, existing_data=None):
+    data = {
         "good": collect_editor_values(form, "good"),
         "neutral": collect_editor_values(form, "neutral"),
         "bad": collect_editor_values(form, "bad"),
@@ -174,6 +247,11 @@ def build_door_data_from_form(form):
             "probablyBad": collect_editor_values(form, "probablyBad"),
         },
     }
+    if form.get("has_uncertain") == "1":
+        data["uncertain"] = collect_uncertain_entries(form)
+    elif existing_data and "uncertain" in existing_data:
+        data["uncertain"] = get_uncertain_entries(existing_data)
+    return data
 
 
 def write_door_data(static_folder, data):
@@ -220,6 +298,16 @@ def render_plain_text_door_data(data):
     for title, phrases in sections:
         lines.append(f"{title}:")
         lines.extend(phrases)
+        lines.append("")
+    uncertain = data.get("uncertain", [])
+    if uncertain:
+        lines.append("Uncertain:")
+        for entry in uncertain:
+            if not isinstance(entry, dict) or not entry.get("hint"):
+                continue
+            good_count = entry.get("good", 0)
+            bad_count = entry.get("bad", 0)
+            lines.append(f"{entry['hint']} ({good_count} / {bad_count})")
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
@@ -347,7 +435,10 @@ def create_app():
         elif request.method == "POST" and request.form.get("action") == "save":
             if is_door_editor_password(posted_password):
                 editor_password = posted_password
-                data = build_door_data_from_form(request.form)
+                data = build_door_data_from_form(
+                    request.form,
+                    existing_data=load_door_data(app.static_folder),
+                )
                 write_door_data(app.static_folder, data)
                 message = "Saved."
             else:
@@ -366,6 +457,7 @@ def create_app():
             "door_editor.html",
             locked=False,
             categories=get_editor_categories(data),
+            uncertain_entries=get_uncertain_entries(data),
             editor_password=editor_password,
             message=message,
             error=error,
@@ -378,7 +470,10 @@ def create_app():
         if not is_door_editor_password(posted_password):
             abort(403)
 
-        data = build_door_data_from_form(request.form)
+        data = build_door_data_from_form(
+            request.form,
+            existing_data=load_door_data(app.static_folder),
+        )
         exported = render_plain_text_door_data(data)
         return Response(
             exported,

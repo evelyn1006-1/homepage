@@ -298,12 +298,6 @@
         font-size: 1.4rem;
       }
 
-      .category-description {
-        margin: 4px 0 0;
-        color: var(--muted);
-        line-height: 1.4;
-      }
-
       .count {
         border: 1px solid var(--line);
         border-radius: 999px;
@@ -322,6 +316,29 @@
         grid-template-columns: 1fr auto;
         gap: 8px;
         align-items: start;
+      }
+
+      .uncertain-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(180px, 220px) auto;
+        gap: 8px;
+        align-items: start;
+      }
+
+      .score-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .score-field {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .score-field input {
+        margin-top: 6px;
       }
 
       .category-footer {
@@ -343,7 +360,8 @@
         .unlock-form,
         .actions,
         .category-header,
-        .hint-row {
+        .hint-row,
+        .uncertain-row {
           grid-template-columns: 1fr;
         }
 
@@ -425,6 +443,7 @@
           <form action="{{ url_for('door_classifier_edit') }}" method="post" data-editor-form>
             <input type="hidden" name="action" value="save">
             <input type="hidden" name="editor_password" value="{{ editor_password }}">
+            <input type="hidden" name="has_uncertain" value="1">
 
             <div class="actions">
               <span class="totals" data-total-count></span>
@@ -445,10 +464,7 @@
               {% for category in categories %}
                 <section class="category {{ category.tone }}" data-category="{{ category.key }}">
                   <header class="category-header">
-                    <div>
-                      <h2>{{ category.label }}</h2>
-                      <p class="category-description">{{ category.description }}</p>
-                    </div>
+                    <h2>{{ category.label }}</h2>
                     <span class="count" data-count>{{ category.count }} hints</span>
                   </header>
 
@@ -468,6 +484,38 @@
                   </div>
                 </section>
               {% endfor %}
+
+              <section class="category neutral" data-uncertain-section>
+                <header class="category-header">
+                  <h2>Uncertain Counts</h2>
+                  <span class="count" data-uncertain-count>{{ uncertain_entries|length }} hints</span>
+                </header>
+
+                <div class="rows" data-uncertain-rows>
+                  {% for entry in uncertain_entries %}
+                    <div class="uncertain-row" data-uncertain-row>
+                      <textarea name="uncertain_hint" rows="2">{{ entry.hint }}</textarea>
+                      <div class="score-fields">
+                        <label class="score-field">
+                          Good
+                          <input name="uncertain_good" type="number" min="0" step="1" value="{{ entry.good }}">
+                        </label>
+                        <label class="score-field">
+                          Bad
+                          <input name="uncertain_bad" type="number" min="0" step="1" value="{{ entry.bad }}">
+                        </label>
+                      </div>
+                      <button class="danger-button" type="button" data-remove-uncertain>Remove</button>
+                    </div>
+                  {% endfor %}
+                </div>
+
+                <p class="empty-category" data-empty-uncertain{% if uncertain_entries %} hidden{% endif %}>No uncertain hints.</p>
+
+                <div class="category-footer">
+                  <button class="ghost-button" type="button" data-add-uncertain>Add Uncertain Hint</button>
+                </div>
+              </section>
             </div>
           </form>
         {% endif %}
@@ -493,6 +541,21 @@
             countLabel.textContent = count === 1 ? "1 hint" : `${count} hints`;
             emptyLabel.hidden = rows.length > 0;
           });
+
+          const uncertainSection = document.querySelector("[data-uncertain-section]");
+          if (uncertainSection) {
+            const rows = [...uncertainSection.querySelectorAll("[data-uncertain-row]")];
+            const filledRows = rows.filter((row) => {
+              const field = row.querySelector("textarea");
+              return field && field.value.trim();
+            });
+            const count = filledRows.length;
+            total += count;
+            const countLabel = uncertainSection.querySelector("[data-uncertain-count]");
+            const emptyLabel = uncertainSection.querySelector("[data-empty-uncertain]");
+            countLabel.textContent = count === 1 ? "1 hint" : `${count} hints`;
+            emptyLabel.hidden = rows.length > 0;
+          }
 
           const totalLabel = document.querySelector("[data-total-count]");
           totalLabel.textContent = total === 1 ? "1 total hint" : `${total} total hints`;
@@ -522,6 +585,62 @@
           return row;
         };
 
+        const createUncertainRow = (hint = "", good = 0, bad = 0) => {
+          const row = document.createElement("div");
+          row.className = "uncertain-row";
+          row.dataset.uncertainRow = "";
+
+          const textarea = document.createElement("textarea");
+          textarea.name = "uncertain_hint";
+          textarea.rows = 2;
+          textarea.value = hint;
+          textarea.addEventListener("input", updateCounts);
+
+          const scoreFields = document.createElement("div");
+          scoreFields.className = "score-fields";
+
+          const goodLabel = document.createElement("label");
+          goodLabel.className = "score-field";
+          goodLabel.textContent = "Good";
+
+          const goodInput = document.createElement("input");
+          goodInput.name = "uncertain_good";
+          goodInput.type = "number";
+          goodInput.min = "0";
+          goodInput.step = "1";
+          goodInput.value = good;
+          goodInput.addEventListener("input", updateCounts);
+
+          const badLabel = document.createElement("label");
+          badLabel.className = "score-field";
+          badLabel.textContent = "Bad";
+
+          const badInput = document.createElement("input");
+          badInput.name = "uncertain_bad";
+          badInput.type = "number";
+          badInput.min = "0";
+          badInput.step = "1";
+          badInput.value = bad;
+          badInput.addEventListener("input", updateCounts);
+
+          goodLabel.append(goodInput);
+          badLabel.append(badInput);
+          scoreFields.append(goodLabel, badLabel);
+
+          const removeButton = document.createElement("button");
+          removeButton.className = "danger-button";
+          removeButton.type = "button";
+          removeButton.dataset.removeUncertain = "";
+          removeButton.textContent = "Remove";
+          removeButton.addEventListener("click", () => {
+            row.remove();
+            updateCounts();
+          });
+
+          row.append(textarea, scoreFields, removeButton);
+          return row;
+        };
+
         document.querySelectorAll("[data-category]").forEach((category) => {
           const key = category.dataset.category;
           const rows = category.querySelector("[data-rows]");
@@ -545,6 +664,30 @@
             textarea.addEventListener("input", updateCounts);
           });
         });
+
+        const uncertainSection = document.querySelector("[data-uncertain-section]");
+        if (uncertainSection) {
+          const rows = uncertainSection.querySelector("[data-uncertain-rows]");
+          const addButton = uncertainSection.querySelector("[data-add-uncertain]");
+
+          addButton.addEventListener("click", () => {
+            const row = createUncertainRow();
+            rows.append(row);
+            row.querySelector("textarea").focus();
+            updateCounts();
+          });
+
+          uncertainSection.querySelectorAll("[data-remove-uncertain]").forEach((button) => {
+            button.addEventListener("click", () => {
+              button.closest("[data-uncertain-row]").remove();
+              updateCounts();
+            });
+          });
+
+          uncertainSection.querySelectorAll("textarea, input").forEach((field) => {
+            field.addEventListener("input", updateCounts);
+          });
+        }
 
         updateCounts();
       }

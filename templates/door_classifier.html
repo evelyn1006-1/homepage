@@ -189,6 +189,50 @@
         line-height: 1.5;
       }
 
+      .uncertainty-note {
+        margin: 0 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.45;
+      }
+
+      .uncertainty-note summary {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        cursor: pointer;
+        list-style: none;
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .uncertainty-note summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .uncertainty-note summary::after {
+        content: "";
+        width: 0.45rem;
+        height: 0.45rem;
+        flex: 0 0 auto;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(45deg);
+      }
+
+      .uncertainty-note[open] summary::after {
+        transform: rotate(225deg);
+      }
+
+      .uncertainty-note-text {
+        margin: 8px 0 0;
+      }
+
       .single-result {
         border: 1px solid var(--line);
         border-left-width: 8px;
@@ -226,6 +270,22 @@
         padding: 6px 12px;
         background: var(--neutral);
         color: #161416;
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+
+      .single-counts {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 0 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 12px;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.08);
         font-size: 0.95rem;
         font-weight: 700;
         line-height: 1.1;
@@ -291,6 +351,12 @@
         font-size: 0.86rem;
         font-weight: 700;
         overflow-wrap: anywhere;
+      }
+
+      .badge.counts {
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .badge.good {
@@ -376,22 +442,52 @@
 
         <div class="results" aria-live="polite" data-results>
           {% if not query %}
+            <details class="uncertainty-note" open>
+              <summary>Uncertainty note</summary>
+              <p class="uncertainty-note-text">Hints are either good, bad, or neutral; there is no in-between. Uncertainty reflects a lack of data. In general, a hint with both positive and negative clues should be treated as neutral, even if it strongly leans one way or another. Mimics lie about hints, so they give either good or neutral hints.</p>
+            </details>
             <p class="empty">Enter a door hint.</p>
           {% elif matches|length == 0 %}
             <p class="empty">No match for "{{ query }}".</p>
             <p class="empty-note">If you're sure this hint exists, contact Evelyn so she can add it.</p>
           {% elif matches|length == 1 %}
             {% set match = matches[0] %}
+            {% if match.count_text %}
+              <details class="uncertainty-note" open>
+                <summary>Uncertainty note</summary>
+                <p class="uncertainty-note-text">Hints are either good, bad, or neutral; there is no in-between. Uncertainty reflects a lack of data. In general, a hint with both positive and negative clues should be treated as neutral, even if it strongly leans one way or another. Mimics lie about hints, so they give either good or neutral hints.</p>
+              </details>
+            {% endif %}
             <article class="single-result {{ match.tone }}">
-              <p class="single-label">{{ match.label }}</p>
+              {% if match.count_text %}
+                <p class="single-counts">{{ match.count_text }}</p>
+              {% else %}
+                <p class="single-label">{{ match.label }}</p>
+              {% endif %}
               <p class="single-phrase">{{ match.phrase }}</p>
             </article>
           {% else %}
+            {% set has_count_match = namespace(value=false) %}
+            {% for match in matches %}
+              {% if match.count_text %}
+                {% set has_count_match.value = true %}
+              {% endif %}
+            {% endfor %}
+            {% if has_count_match.value %}
+              <details class="uncertainty-note" open>
+                <summary>Uncertainty note</summary>
+                <p class="uncertainty-note-text">Hints are either good, bad, or neutral; there is no in-between. Uncertainty reflects a lack of data. In general, a hint with both positive and negative clues should be treated as neutral, even if it strongly leans one way or another. Mimics lie about hints, so they give either good or neutral hints.</p>
+              </details>
+            {% endif %}
             <p class="summary">{{ matches|length }} matches for "{{ query }}".</p>
             <ul class="match-list">
               {% for match in matches %}
                 <li class="match">
-                  <span class="badge {{ match.tone }}">{{ match.label }}</span>
+                  {% if match.count_text %}
+                    <span class="badge counts">{{ match.count_text }}</span>
+                  {% else %}
+                    <span class="badge {{ match.tone }}">{{ match.label }}</span>
+                  {% endif %}
                   <p class="phrase">{{ match.phrase }}</p>
                 </li>
               {% endfor %}
@@ -408,6 +504,7 @@
       const apostrophePattern = /['’]/g;
       const nonWordPattern = /[^\p{L}\p{N}_]+/gu;
       const spacePattern = /\s+/g;
+      const uncertaintyNoteText = "Hints are either good, bad, or neutral; there is no in-between. Uncertainty reflects a lack of data. In general, a hint with both positive and negative clues should be treated as neutral, even if it strongly leans one way or another. Mimics lie about hints, so they give either good or neutral hints.";
 
       const normalizeHint = (value) => {
         return value
@@ -433,6 +530,7 @@
         message.className = "empty";
 
         if (!query) {
+          appendUncertaintyNote([], true);
           message.textContent = "Enter a door hint.";
           results.append(message);
           return;
@@ -445,13 +543,33 @@
         results.append(message, note);
       };
 
+      const appendUncertaintyNote = (matches, force = false) => {
+        if (!force && !matches.some((match) => match.count_text)) {
+          return;
+        }
+
+        const note = document.createElement("details");
+        note.className = "uncertainty-note";
+        note.open = true;
+
+        const summary = document.createElement("summary");
+        summary.textContent = "Uncertainty note";
+
+        const text = document.createElement("p");
+        text.className = "uncertainty-note-text";
+        text.textContent = uncertaintyNoteText;
+
+        note.append(summary, text);
+        results.append(note);
+      };
+
       const appendSingleMatch = (match) => {
         const card = document.createElement("article");
         card.className = `single-result ${match.tone}`;
 
         const label = document.createElement("p");
-        label.className = "single-label";
-        label.textContent = match.label;
+        label.className = match.count_text ? "single-counts" : "single-label";
+        label.textContent = match.count_text || match.label;
 
         const phrase = document.createElement("p");
         phrase.className = "single-phrase";
@@ -474,8 +592,8 @@
           item.className = "match";
 
           const badge = document.createElement("span");
-          badge.className = `badge ${match.tone}`;
-          badge.textContent = match.label;
+          badge.className = match.count_text ? "badge counts" : `badge ${match.tone}`;
+          badge.textContent = match.count_text || match.label;
 
           const phrase = document.createElement("p");
           phrase.className = "phrase";
@@ -503,8 +621,10 @@
         } else if (matches.length === 0) {
           appendEmptyState(query);
         } else if (matches.length === 1) {
+          appendUncertaintyNote(matches);
           appendSingleMatch(matches[0]);
         } else {
+          appendUncertaintyNote(matches);
           appendMatchList(matches, query);
         }
       };
