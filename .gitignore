@@ -15,8 +15,6 @@ __pycache__/
 logs/
 *.log
 
-# Large local media
-static/videos/
 
 # IDE
 .vscode/

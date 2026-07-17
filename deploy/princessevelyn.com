@@ -59,22 +59,16 @@ server {
 
 }
 server {
-    if ($host = www.princessevelyn.com) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
-
-
-    if ($host = princessevelyn.com) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
-
-
     server_name princessevelyn.com www.princessevelyn.com;
 
     listen 80;
-    return 404; # managed by Certbot
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/html;
+        default_type text/plain;
+        try_files $uri =404;
+    }
 
-
-
-
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }

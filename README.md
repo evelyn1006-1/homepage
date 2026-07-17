@@ -1,7 +1,7 @@
 # Princess Evelyn Homepage
 
 A small Flask site for `princessevelyn.com`, with a playful homepage, error pages,
-dog and cat easter eggs, public license hosting, and a Door Classifier tool.
+dog and cat easter eggs, and public license hosting.
 
 ## Features
 
@@ -10,10 +10,6 @@ dog and cat easter eggs, public license hosting, and a Door Classifier tool.
 - Custom 403, 404, and 500 error pages
 - Security headers and allowed-host checking
 - `/license/pel-1` route for Princess Evelyn's License
-- `/videos/1` and `/videos/2` routes for local static recordings
-- `/door/classifier` for checking Corridor door hints
-- Password-protected `/door/classifier/edit` data editor
-- Plain-text export for edited door classifier data
 
 ## Project Layout
 
@@ -30,7 +26,6 @@ homepage/
 │   └── princessevelyn.com         # nginx site config
 ├── static/
 │   ├── PEL-1.md                   # Web-served license text
-│   ├── door-data.json             # Door classifier data
 │   ├── robots.txt
 │   ├── fonts/
 │   └── img/
@@ -38,8 +33,6 @@ homepage/
     ├── index.html
     ├── dog.html
     ├── cat.html
-    ├── door_classifier.html
-    ├── door_editor.html
     ├── 403.html
     ├── 404.html
     └── 500.html
@@ -68,7 +61,6 @@ Environment variables are loaded from `.env` at startup.
 | Variable | Default | Purpose |
 |---|---|---|
 | `FLASK_SECRET_KEY` | unset | Flask session signing key. Set this in production. |
-| `DOOR_EDITOR_PASSWORD` | empty | Enables the door data editor when set to at least 8 characters. |
 | `ALLOWED_HOSTS` | `princessevelyn.com,www.princessevelyn.com,localhost,127.0.0.1` | Comma-separated hosts accepted by the app. |
 
 The deployment unit expects the environment file at:
