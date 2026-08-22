@@ -42,6 +42,90 @@ server {
         return 404;
     }
 
+    # Princess Evelyn's authenticated Internet MCP bridge. The public MCP and
+    # OAuth paths are intentionally stable; the loopback service uses shorter
+    # internal routes.
+    location = /mcp/internet {
+        proxy_pass http://127.0.0.1:8008/mcp;
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_read_timeout 180s;
+        proxy_send_timeout 180s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /mcp/internet/ {
+        return 308 /mcp/internet;
+    }
+
+    location = /mcp/internet/health {
+        proxy_pass http://127.0.0.1:8008/healthz;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /.well-known/oauth-protected-resource/mcp/internet {
+        proxy_pass http://127.0.0.1:8008/.well-known/oauth-protected-resource/mcp/internet;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /.well-known/oauth-authorization-server/mcp/oauth {
+        proxy_pass http://127.0.0.1:8008/.well-known/oauth-authorization-server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /mcp/oauth/authorize {
+        proxy_pass http://127.0.0.1:8008/authorize;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /mcp/oauth/token {
+        proxy_pass http://127.0.0.1:8008/token;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /mcp/oauth/register {
+        proxy_pass http://127.0.0.1:8008/register;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /mcp/oauth/revoke {
+        proxy_pass http://127.0.0.1:8008/revoke;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /mcp/oauth/consent {
+        proxy_pass http://127.0.0.1:8008/oauth/consent;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
     location / {
         proxy_pass http://127.0.0.1:8003;
         proxy_set_header Host $host;
